@@ -1,0 +1,15 @@
+GET http://localhost:3000/songs
+###
+GET http://localhost:3000/songs/Moglii
+###
+POST http://localhost:3000/songs/add
+Content-Type: application/json
+
+{
+    "title": "testititlew", 
+    "artist": "testiartist",
+    "album": "testialbum", 
+    "year": "2222"
+}
+###
+DELETE http://localhost:3000/songs/delete/696e060f9811dd1f371fcb3c
