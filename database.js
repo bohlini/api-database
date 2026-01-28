@@ -4,36 +4,26 @@ let collection;
 
 async function startDatabase() {
     await client.connect()
+
     const db = client.db('music-library')
     collection = db.collection('playlist')
 }
 
 async function showAll() {
-    const all = await collection.find({}).toArray()
-    return all
+    return await collection.find({}).toArray()
 }
 
 async function filterByArtist(artist) {
-    const song = await collection.find({
-        artist: artist
-    }).toArray()
-    return song
+    return await collection.find({ artist }).toArray()
 }
 
 async function addSong(title, artist, album, year) {
-    const isExisting = await collection.findOne({
-        title: title,
-        artist: artist
-    })
+    const isExisting = await collection.findOne({ title, artist })
+
     if (isExisting) {
         return { currentlyExisting: true }
     } else {
-        await collection.insertOne({
-            title: title,
-            artist: artist,
-            album: album,
-            year: year
-        })
+        await collection.insertOne({ title, artist, album, year })
         return { currentlyExisting: false }
     }
 }
@@ -42,12 +32,11 @@ async function deleteSong(id) {
     const isExisting = await collection.findOne({
         _id: id
     })
+
     if (!isExisting) {
         return { currentlyExisting: false }
     } else {
-        await collection.deleteOne({
-            _id: id
-        })
+        await collection.deleteOne({ _id: id })
         return { currentlyExisting: true }
     }
 }

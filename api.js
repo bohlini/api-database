@@ -13,10 +13,11 @@ const init = async () => {
     }
 }
 
-init(); // this parts need chaningin. it does not make sense (removed error catch thing)
+init();
 
 app.get('/songs', async (req, res) => {
     const result = await showAll()
+
     if (result.length < 1) {
         res.status(404).send('No songs found')
     } else {
@@ -26,6 +27,7 @@ app.get('/songs', async (req, res) => {
 
 app.get('/songs/:artist', async (req, res) => {
     const result = await filterByArtist(req.params.artist)
+
     if (result.length < 1) {
         res.status(404).send('Artist not found')
     } else {
@@ -37,12 +39,14 @@ app.post('/songs/add', async (req, res) => {
     if (!/^\d{4}$/.test(req.body.year)) {
         return res.status(400).send('Year must be a 4-digit number')
     }
+
     const result = await addSong(
         req.body.title,
         req.body.artist,
         req.body.album,
         req.body.year
     )
+
     if (result.currentlyExisting) {
         res.status(409).send('Song already exist')
     } else {
@@ -51,13 +55,24 @@ app.post('/songs/add', async (req, res) => {
 })
 
 app.delete('/songs/delete/:id', async (req, res) => {
-    const result = await deleteSong(
-        new ObjectId(req.params.id)
-    )
-    if (result.currentlyExisting) {
+    try{
+        const { id } = req.params
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).send('ID is not valid')
+        }
+
+        const result = await deleteSong(
+            new ObjectId(id)
+        )
+
+        if (!result.currentlyExisting) {
+            return res.status(404).send('Song not found')
+        }
+
         res.status(204).send()
-    } else {
-        res.status(404).send('Song not found')
+    } catch (error) {
+        res.status(500).send('Internal server issue')
     }
 })
 
