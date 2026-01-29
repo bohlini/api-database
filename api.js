@@ -55,7 +55,7 @@ app.post('/songs/add', async (req, res) => {
 })
 
 app.delete('/songs/delete/:id', async (req, res) => {
-        const { id } = req.params
+        const id = req.params.id
 
         if (!ObjectId.isValid(id)) {
             return res.status(400).send('ID is not valid')
