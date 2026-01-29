@@ -24,6 +24,7 @@ async function addSong(title, artist, album, year) {
         return { currentlyExisting: true }
     } else {
         await collection.insertOne({ title, artist, album, year })
+        
         return { currentlyExisting: false }
     }
 }
@@ -37,6 +38,7 @@ async function deleteSong(id) {
         return { currentlyExisting: false }
     } else {
         await collection.deleteOne({ _id: id })
+
         return { currentlyExisting: true }
     }
 }
