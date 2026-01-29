@@ -1,6 +1,6 @@
 # api-database
 
-This is a simple API built with Node.js, Express and MongoDB. It lets you store and manage a small musiv library using HTTP requests. The API runs locally and uses MongoDB database created by the project. 
+This is a simple API built with Node.js, Express and MongoDB. It lets you store and manage a small music library using HTTP requests. The API runs locally and uses MongoDB database created by the project. 
 
 What it does
 - Stores songs in a MongoDB database
