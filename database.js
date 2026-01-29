@@ -18,13 +18,21 @@ async function filterByArtist(artist) {
 }
 
 async function addSong(title, artist, album, year) {
-    const isExisting = await collection.findOne({ title, artist })
+    const isExisting = await collection.findOne({ 
+        title, 
+        artist 
+    })
 
     if (isExisting) {
         return { currentlyExisting: true }
     } else {
-        await collection.insertOne({ title, artist, album, year })
-        
+        await collection.insertOne({
+            title,
+            artist,
+            album,
+            year
+        })
+
         return { currentlyExisting: false }
     }
 }
