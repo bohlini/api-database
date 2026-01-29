@@ -4,7 +4,6 @@ let collection;
 
 async function startDatabase() {
     await client.connect()
-
     const db = client.db('music-library')
     collection = db.collection('playlist')
 }
@@ -18,9 +17,9 @@ async function filterByArtist(artist) {
 }
 
 async function addSong(title, artist, album, year) {
-    const isExisting = await collection.findOne({ 
-        title, 
-        artist 
+    const isExisting = await collection.findOne({
+        title,
+        artist
     })
 
     if (isExisting) {
@@ -32,7 +31,6 @@ async function addSong(title, artist, album, year) {
             album,
             year
         })
-
         return { currentlyExisting: false }
     }
 }
@@ -45,8 +43,9 @@ async function deleteSong(id) {
     if (!isExisting) {
         return { currentlyExisting: false }
     } else {
-        await collection.deleteOne({ _id: id })
-
+        await collection.deleteOne({
+            _id: id
+        })
         return { currentlyExisting: true }
     }
 }
