@@ -55,7 +55,6 @@ app.post('/songs/add', async (req, res) => {
 })
 
 app.delete('/songs/delete/:id', async (req, res) => {
-    try{
         const { id } = req.params
 
         if (!ObjectId.isValid(id)) {
@@ -71,9 +70,6 @@ app.delete('/songs/delete/:id', async (req, res) => {
         }
 
         res.status(204).send()
-    } catch (error) {
-        res.status(500).send('Internal server issue')
-    }
 })
 
 app.listen(port, () => {
