@@ -25,13 +25,22 @@ async function addSong(title, artist, album, year) {
     if (isExisting) {
         return { currentlyExisting: true }
     } else {
-        await collection.insertOne({
-            title,
-            artist,
-            album,
+        const newSong = {
+            title, 
+            artist, 
+            album, 
             year
-        })
-        return { currentlyExisting: false }
+        }
+
+        const result = await collection.insertOne(newSong)
+
+        return { 
+            currentlyExisting: false, 
+            song: {
+                _id: result.insertedId,
+                ...newSong
+            }
+        }
     }
 }
 

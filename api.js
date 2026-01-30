@@ -19,9 +19,16 @@ app.get('/songs', async (req, res) => {
     const result = await showAll()
 
     if (result.length < 1) {
-        res.status(404).send('No songs found')
+        res.status(404).json({
+            success: false,
+            error: 'Not Found',
+            message: 'No songs found'
+        })
     } else {
-        res.status(200).json(result)
+        res.status(200).json({
+            success: true,
+            data: result
+        })
     }
 })
 
@@ -29,15 +36,26 @@ app.get('/songs/:artist', async (req, res) => {
     const result = await filterByArtist(req.params.artist)
 
     if (result.length < 1) {
-        res.status(404).send('Artist not found')
+        res.status(404).json({
+            success: false,
+            error: 'Not Found',
+            message: 'Artist not found'
+        })
     } else {
-        res.status(200).json(result)
+        res.status(200).json({
+            success: true,
+            data: result
+        })
     }
 })
 
 app.post('/songs/add', async (req, res) => {
     if (!/^\d{4}$/.test(req.body.year)) {
-        return res.status(400).send('Year must be a 4-digit number')
+        return res.status(400).json({
+            success: false,
+            error: 'Bad Request',
+            message: 'Year must be a 4-digit number'
+        })
     }
 
     const result = await addSong(
@@ -48,28 +66,47 @@ app.post('/songs/add', async (req, res) => {
     )
 
     if (result.currentlyExisting) {
-        res.status(409).send('Song already exist')
+        res.status(409).json({
+            success: false,
+            error: 'Conflict',
+            message: 'Song already exist'
+        })
     } else {
-        res.status(201).send('Song created')
+        res.status(201).json({
+            success: true,
+            data: result.song
+        }) 
     }
 })
 
 app.delete('/songs/delete/:id', async (req, res) => {
-        const id = req.params.id
+    const id = req.params.id
 
-        if (!ObjectId.isValid(id)) {
-            return res.status(400).send('ID is not valid')
-        }
+    if (!ObjectId.isValid(id)) {
+        return res.status(400).json({
+            success: false,
+            error: 'Bad Request',
+            message: 'ID is not valid'
+        })
+    }
 
-        const result = await deleteSong(
-            new ObjectId(id)
-        )
+    const result = await deleteSong(
+        new ObjectId(id)
+    )
 
-        if (!result.currentlyExisting) {
-            return res.status(404).send('Song not found')
-        }
+    if (!result.currentlyExisting) {
+        return res.status(404).json({
+            success: false,
+            error: 'Not Found',
+            message: 'Song not found'
+        })
+    }
 
-        res.status(204).send()
+    res.status(200).json({
+        success: true,
+        message: 'Deleted successfully',
+        data: id
+    })
 })
 
 app.listen(port, () => {
